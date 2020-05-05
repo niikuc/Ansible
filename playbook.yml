@@ -1,0 +1,42 @@
+---
+- name: Build Apache Web Servers
+  hosts: webservers
+  become: yes
+
+  tasks:
+  - name: ensure apache is installed
+    apt: name=apache2 state=present
+
+  - name: copy the latest hostfile
+    copy: src=/etc/hosts dest=/etc/hosts
+
+  - name: create a new user called sysadm
+    user: name=sysadm password=password
+
+  - name: ensure the apache2 web service is started
+    service: name=apache2 state=started
+
+- name: Build MySQL Database Servers
+  hosts: dbservers
+  become: yes
+
+  tasks:
+  - name: ensure MySQL is installed
+    apt:
+      name=mysql-server
+      state=installed
+
+  - name: copy the latest hostfile
+    copy:
+      src=/etc/hosts
+      dest=/etc/hosts
+
+  - name: create a new user called sysadm
+    user:
+      name=sysadm
+      password=password
+
+  - name: ensure the MySQL service is started
+    service:
+      name=mysql
+      state=started
